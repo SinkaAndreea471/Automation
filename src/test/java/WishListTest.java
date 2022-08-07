@@ -1,3 +1,4 @@
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -8,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class WishListTest {
     public WishListTest() {
     }
-
+    @Test
     public void validAddToWishListTest() {
         System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
