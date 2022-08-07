@@ -1,25 +1,41 @@
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.util.concurrent.TimeUnit;
-
 public class WishListTest {
-    public WishListTest() {
+    private WebDriver driver;
+
+    @Before
+    public void initDriver(){
+        System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("http://testfasttrackit.info/selenium-test");
+        driver.findElement(By.cssSelector("a.skip-link.skip-account")).click();
+        driver.findElement(By.cssSelector("a[href*=\"login\"]")).click();
+        driver.findElement(By.id("email")).sendKeys(new CharSequence[]{"portiag@gmail.com"});
+        driver.findElement(By.id("pass")).sendKeys(new CharSequence[]{"123456789"});
+        driver.findElement(By.id("send2")).click();
+        WebElement welcomeMessage = driver.findElement(By.cssSelector("p strong"));
+        Assert.assertEquals("Hello, Portia Greenbottle!", welcomeMessage.getText());
     }
+
     @Test
     public void validAddToWishListTest() {
-        System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        JavascriptExecutor js = (JavascriptExecutor)driver;
-        driver.get("http://testfasttrackit.info/selenium-test");
-        driver.findElement(By.cssSelector("#nav > ol > li.level0.nav-5.parent > a")).click();
-        driver.findElement(By.cssSelector("body > div > div.page > div.main-container.col3-layout > div > div.col-wrapper > div.col-main > div.category-products > ul > li > div > h2 > a")).click();
-        driver.findElement(By.cssSelector("#product_addtocart_form > div.product-shop > div.product-options-bottom > ul.add-to-links > li:nth-child(1) > a")).click();
-        driver.manage().timeouts().implicitlyWait(110, TimeUnit.SECONDS);
+        driver.findElement(By.cssSelector("li.level0.nav-5.parent > a.level0.has-children")).click();
+        driver.findElement(By.cssSelector("li.item.last a.product-image")).click();
+        driver.findElement(By.cssSelector("a.link-wishlist")).click();
+        WebElement addToWishlistMessage = driver.findElement(By.cssSelector("li.success-msg span"));
+        Assert.assertEquals("Slim fit Dobby Oxford Shirt has been added to your wishlist. Click here to continue shopping.", addToWishlistMessage.getText());
+    }
+
+    @After
+    public void closeDriver(){
         driver.quit();
     }
 }
